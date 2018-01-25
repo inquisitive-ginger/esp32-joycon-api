@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/zap/.platformio/penv/bin:/Users/zap/.platformio/penv:/Users/zap/anaconda2/bin:/Users/zap/.cargo/bin:/Users/zap/.nvm/versions/node/v6.11.3/bin:/Users/zap/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Applications/Wireshark.app/Contents/MacOS:/Users/zap/Library/Android/sdk/tools:/Users/zap/Library/Android/sdk/platform-tools",
+        "PLATFORMIO_CALLER": "vscode"
+    }
+}
