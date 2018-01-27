@@ -1,5 +1,7 @@
 #include "ESPAsyncWebServer.h"
 #include "AsyncTCP.h"
+#include "Servo.h"
+#include <string>
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws"); // access at ws://[esp ip]/ws
@@ -7,6 +9,20 @@ IPAddress apIP(192, 168, 1, 1);
 
 //flag to use from web update to reboot the ESP
 bool shouldReboot = false;
+
+static const int servoPin = 4;
+Servo joystickServo;
+
+void moveJoystick(std::string direction){
+  Serial.printf("Move Joystick: %s", direction);
+  if (direction == "LEFT"){
+    joystickServo.write(110);
+    Serial.println("Moving left...");    
+  } else if(direction == "RIGHT"){
+    Serial.println("Moving right...");
+    joystickServo.write(60);
+  }
+}
 
 void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len){
  if(type == WS_EVT_CONNECT){
@@ -30,6 +46,7 @@ void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventTyp
         for(size_t i=0; i < info->len; i++) {
           msg += (char) data[i];
         }
+        moveJoystick(msg.c_str());
       } else {
         char buff[3];
         for(size_t i=0; i < info->len; i++) {
@@ -84,11 +101,15 @@ void setup(){
   Serial.begin(115200);
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP("MK-ESP32");
+  WiFi.softAP("MK-ESP32-ZACH01");
 
   // attach AsyncWebSocket
   ws.onEvent(onEvent);
   server.addHandler(&ws);
+
+  // set up servo
+  joystickServo.attach(servoPin);
+  joystickServo.write(90);
 
   // Catch-All Handlers
   // Any request that can not find a Handler that canHandle it
